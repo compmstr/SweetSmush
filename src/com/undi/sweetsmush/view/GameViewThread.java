@@ -1,7 +1,5 @@
 package com.undi.sweetsmush.view;
 
-import android.graphics.Canvas;
-
 import com.undi.sweetsmush.ui.GameDraw;
 import com.undi.sweetsmush.ui.GameInput;
 
@@ -19,6 +17,7 @@ public class GameViewThread extends Thread {
 	public void run(){
 		while(running){
 			drawer.draw();
+			input.handleInput();
 		}
 	}
 	

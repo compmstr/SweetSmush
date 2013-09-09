@@ -1,7 +1,5 @@
 package com.undi.sweetsmush.ui;
 
-import com.undi.sweetsmush.view.GameViewThread;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
@@ -16,10 +14,17 @@ public class GameDraw {
 		this.holder = holder;
 	}
 	
+	/**
+	 * Internal function to actually do the drawing
+	 * @param c
+	 */
 	private void doDraw(Canvas c){
 		
 	}
 
+	/**
+	 * Public function to lock canvas, draw, and unlock canvas
+	 */
 	public void draw(){
 		Canvas c = null;
 		try{

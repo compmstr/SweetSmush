@@ -1,6 +1,7 @@
 package com.undi.sweetsmush.view;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.view.View;
 
 public class TitleView extends View {
@@ -11,4 +12,8 @@ public class TitleView extends View {
 		this.context = context;
 	}
 
+	@Override
+	public void onDraw(Canvas canvas){
+		
+	}
 }
