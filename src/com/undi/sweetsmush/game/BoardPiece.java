@@ -26,7 +26,8 @@ public class BoardPiece {
 	}
 	
 	public boolean matches(BoardPiece other){
-		return this.category == other.getCategory();
+		return this.category == other.category ||
+				other.category == Category.WILD;
 	}
 	
 	public Category getCategory() { return this.category; }

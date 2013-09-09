@@ -6,7 +6,12 @@ public abstract class Animation {
 	protected int durationMs;
 	protected long endTime;
 	protected boolean done = false;
+	protected boolean gameStopping = false;
 
+	public Animation(Runnable callback, int durationMs, boolean gameStopping){
+		this(callback, durationMs);
+		this.gameStopping = gameStopping;
+	}
 	public Animation(Runnable callback, int durationMs){
 		this.durationMs = durationMs;
 		this.endTime = System.currentTimeMillis() + endTime;
@@ -20,6 +25,7 @@ public abstract class Animation {
 	}
 	
 	public boolean isDone(){ return done; }
+	public boolean isGameStopping(){ return gameStopping; }
 	
 	protected float getInterpolation(long curTime){
 		double remTime = endTime - curTime;

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import android.graphics.Point;
+
 import com.undi.sweetsmush.ui.AnimationMgr;
 
 public class Board {
@@ -19,6 +21,11 @@ public class Board {
 		rand = new Random(seed);
 	}
 	
+	private boolean isWinnable(){
+		//TODO
+		return true;
+	}
+	
 	/**
 	 * Fill in the board with basic pieces
 	 */
@@ -31,6 +38,21 @@ public class Board {
 	 */
 	public void update(){
 		
+	}
+	
+	public boolean isValidMove(Point from, Point to){
+		return isValidMove(getIdx(from.x, from.y), getIdx(to.x, to.y));
+	}
+	public boolean isValidMove(int fromIdx, int toIdx){
+		//make sure they're neighbors
+		if(Math.abs(toIdx - fromIdx) != 1 &&
+				Math.abs(toIdx - fromIdx) != cols){
+			return false;
+		}
+		BoardPiece fromPiece = pieces.get(fromIdx);
+		BoardPiece toPiece = pieces.get(toIdx);
+		
+		return fromPiece.matches(toPiece) || toPiece.matches(fromPiece);
 	}
 	
 	/**

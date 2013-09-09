@@ -26,6 +26,15 @@ public class AnimationMgr {
 		anims.add(a);
 	}
 	
+	public boolean anyGameStopping(){
+		for(Animation anim: anims){
+			if(anim.isGameStopping()){
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	/**
 	 * Updates all of the animations.
 	 * If any are finished, clears them out of the active list, and
