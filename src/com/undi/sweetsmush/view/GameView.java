@@ -7,6 +7,7 @@ import com.undi.sweetsmush.ui.GameDraw;
 import com.undi.sweetsmush.ui.GameInput;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
@@ -38,6 +39,7 @@ public class GameView extends SurfaceView implements Callback {
 		if(thread.getState() == State.TERMINATED){
 			thread = new GameViewThread(drawer, input);
 		}
+		Log.d("GameView" , "=====Surface Created======");
 		thread.setRunning(true);
 		if(thread.getState() == State.NEW){
 			thread.start();

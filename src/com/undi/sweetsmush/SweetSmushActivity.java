@@ -1,6 +1,6 @@
 package com.undi.sweetsmush;
 
-import com.undi.sweetsmush.view.TitleView;
+import com.undi.sweetsmush.view.SweetSmushView;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -9,7 +9,7 @@ import android.view.WindowManager;
 
 public class SweetSmushActivity extends Activity
 {
-	TitleView titleView;
+	SweetSmushView mainView;
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -17,9 +17,9 @@ public class SweetSmushActivity extends Activity
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
-    	titleView = new TitleView(this);
-    	titleView.setKeepScreenOn(true);
+		mainView = new SweetSmushView(this);
+    	mainView.setKeepScreenOn(true);
         super.onCreate(savedInstanceState);
-        setContentView(titleView);
+        setContentView(mainView);
     }
 }

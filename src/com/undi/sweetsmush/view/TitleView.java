@@ -9,15 +9,13 @@ import android.view.MotionEvent;
 import android.view.View;
 
 public class TitleView extends View {
-	private Context context;
 	private TitleDraw drawer;
 	private TitleInput input;
 
-	public TitleView(Context context) {
+	public TitleView(Context context, SweetSmushView parent) {
 		super(context);
-		this.context = context;
 		drawer = new TitleDraw(context);
-		input = new TitleInput();
+		input = new TitleInput(parent);
 	}
 
 	@Override
