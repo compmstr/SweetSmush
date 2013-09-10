@@ -1,5 +1,7 @@
 package com.undi.sweetsmush.ui;
 
+import com.undi.sweetsmush.game.Game;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
@@ -8,10 +10,12 @@ public class GameDraw {
 	private SurfaceHolder holder;
 	private Context context;
 	private int screenW, screenH;
+	private Game game;
 	
-	public GameDraw(SurfaceHolder holder, Context context){
+	public GameDraw(SurfaceHolder holder, Context context, Game game){
 		this.context = context;
 		this.holder = holder;
+		this.game = game;
 	}
 	
 	/**
@@ -19,7 +23,9 @@ public class GameDraw {
 	 * @param c
 	 */
 	private void doDraw(Canvas c){
-		
+		int boardDrawX = (int) (screenW * 0.02);
+		int boardDrawY = 10;
+		game.getLevel().getBoard().draw(boardDrawX, boardDrawY, c);
 	}
 
 	/**

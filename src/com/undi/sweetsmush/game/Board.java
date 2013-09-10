@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import android.graphics.Canvas;
 import android.graphics.Point;
 
 import com.undi.sweetsmush.ui.AnimationMgr;
@@ -38,6 +39,16 @@ public class Board {
 	 */
 	public void update(){
 		
+	}
+	
+	public List<? extends BoardPiece> getPieces(){
+		return pieces;
+	}
+	
+	public void draw(int offsetX, int offsetY, Canvas c){
+		for(BoardPiece piece : pieces){
+			piece.draw(c, offsetX, offsetY);
+		}
 	}
 	
 	public boolean isValidMove(Point from, Point to){

@@ -2,6 +2,7 @@ package com.undi.sweetsmush.view;
 
 import java.lang.Thread.State;
 
+import com.undi.sweetsmush.game.Game;
 import com.undi.sweetsmush.ui.GameDraw;
 import com.undi.sweetsmush.ui.GameInput;
 
@@ -15,11 +16,13 @@ public class GameView extends SurfaceView implements Callback {
 	private GameInput input;
 	private GameDraw drawer;
 	private GameViewThread thread;
+	private Game game;
 
 	public GameView(Context context) {
 		super(context);
 		this.context = context;
-		this.drawer = new GameDraw(getHolder(), context);
+		this.game = new Game();
+		this.drawer = new GameDraw(getHolder(), context, game);
 		this.input = new GameInput();
 		this.thread = new GameViewThread(drawer, input);
 	}
