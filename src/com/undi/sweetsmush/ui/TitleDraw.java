@@ -9,25 +9,17 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
+import android.view.SurfaceHolder;
 
-public class TitleDraw {
+public class TitleDraw extends Drawer{
 	private Context context;
 	
 	private Bitmap backgroundRaw, background;
 	
-	public TitleDraw(Context context){
+	public TitleDraw(SurfaceHolder holder, Context context){
+		super(holder, context);
 		this.context = context;
 		this.backgroundRaw = BitmapFactory.decodeResource(context.getResources(), R.drawable.title);
-	}
-	
-	public void draw(Canvas canvas){
-		if(background != null){
-			Paint bgPaint = new Paint();
-			bgPaint.setColor(Color.GRAY);
-			bgPaint.setStyle(Style.FILL);
-			canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), bgPaint);
-			canvas.drawBitmap(background, 0, 0, null);
-		}
 	}
 	
 	private void scaleBackground(int w, int h){
@@ -35,7 +27,20 @@ public class TitleDraw {
 		this.background = Bitmap.createScaledBitmap(backgroundRaw, w, (int)(w * aspectRatio), true);
 	}
 	
-	public void onSizeChanged(int w, int h){
+	@Override
+	public void onResize(int w, int h){
+		super.onResize(w, h);
 		scaleBackground(w, h);
+	}
+
+	@Override
+	protected void doDraw(Canvas c) {
+		if(background != null){
+			Paint bgPaint = new Paint();
+			bgPaint.setColor(Color.GRAY);
+			bgPaint.setStyle(Style.FILL);
+			c.drawRect(0, 0, c.getWidth(), c.getHeight(), bgPaint);
+			c.drawBitmap(background, 0, 0, null);
+		}
 	}
 }

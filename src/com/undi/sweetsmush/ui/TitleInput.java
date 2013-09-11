@@ -1,28 +1,26 @@
 package com.undi.sweetsmush.ui;
 
+import android.view.MotionEvent;
 import com.undi.sweetsmush.view.SweetSmushView;
 
-import android.view.MotionEvent;
+public class TitleInput extends Input {
 
-public class TitleInput {
-	
-	SweetSmushView mainView;
-	
 	public TitleInput(SweetSmushView mainView) {
-		this.mainView = mainView;
+		super(mainView);
 	}
 
-	public void onTouchEvent(MotionEvent e){
-		int action = e.getAction();
-		
-		switch(action){
-		case MotionEvent.ACTION_DOWN:
-			mainView.switchView(SweetSmushView.State.GAME);
-			break;
-		case MotionEvent.ACTION_MOVE:
-			break;
-		case MotionEvent.ACTION_UP:
-			break;
-		}
+	@Override
+	protected void onActionDown(MotionEvent e) {
+		mainView.switchView(SweetSmushView.State.GAME);
 	}
+
+	@Override
+	protected void onActionMove(MotionEvent e) {
+
+	}
+
+	@Override
+	protected void onActionUp(MotionEvent e) {
+	}
+
 }

@@ -1,23 +1,21 @@
 package com.undi.sweetsmush.view;
 
+import com.undi.sweetsmush.ui.Drawer;
 import com.undi.sweetsmush.ui.GameDraw;
 import com.undi.sweetsmush.ui.GameInput;
 
-public class GameViewThread extends Thread {
+public class SweetSmushViewThread extends Thread {
 	private boolean running = false;
-	private GameDraw drawer;
-	private GameInput input;
+	private Drawer drawer;
 
-	public GameViewThread(GameDraw draw, GameInput input) {
+	public SweetSmushViewThread(Drawer draw) {
 		this.drawer = draw;
-		this.input = input;
 	}
 
 	@Override
 	public void run(){
 		while(running){
 			drawer.draw();
-			input.handleInput();
 		}
 	}
 	
