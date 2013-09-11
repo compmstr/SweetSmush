@@ -7,10 +7,12 @@ import java.util.Random;
 import android.graphics.Canvas;
 import android.graphics.Point;
 
+import com.undi.sweetsmush.game.BoardPiece.Category;
+import com.undi.sweetsmush.game.BoardPiece.SubType;
 import com.undi.sweetsmush.ui.AnimationMgr;
 
 public class Board {
-	private List<? extends BoardPiece> pieces;
+	private List<BoardPiece> pieces;
 	private int cols, rows;
 	private AnimationMgr anims;
 	private Random rand;
@@ -20,6 +22,8 @@ public class Board {
 		this.rows = rows;
 		pieces = new ArrayList<BoardPiece>(rows * cols);
 		rand = new Random(seed);
+		
+		startBoard();
 	}
 	
 	private boolean isWinnable(){
@@ -32,6 +36,18 @@ public class Board {
 	 */
 	private void startBoard(){
 		//TODO
+		int size = rows * cols;
+		Category[] categories = Category.values();
+		SubType[] subTypes = SubType.values();
+		int maxCat = Category.WILD.ordinal();
+		int maxSubType = 1; //just basic pieces
+		for(int i = 0; i < size; i++){
+			Category pickedCategory = categories[rand.nextInt(maxCat)];
+			SubType pickedSubType = subTypes[rand.nextInt(maxSubType)];
+			Point boardPos = new Point(i % cols, i / cols);
+			BoardPiece curPiece = new BoardPiece(boardPos, pickedCategory, pickedSubType);
+			pieces.add(curPiece);
+		}
 	}
 	
 	/**

@@ -2,6 +2,7 @@ package com.undi.sweetsmush.game;
 
 import com.undi.sweetsmush.R;
 import com.undi.sweetsmush.ui.BoardPieceGraphicMgr;
+import com.undi.sweetsmush.ui.BoardPieceGraphicMgr.BoardPieceGraphic;
 
 import android.graphics.Canvas;
 import android.graphics.Point;
@@ -14,26 +15,34 @@ public class BoardPiece {
 	
 	protected Category category;
 	protected SubType subType;
-	protected static BoardPieceGraphicMgr.BoardPieceGraphic graphic;
+	protected static BoardPieceGraphic graphic = null;
 	protected Rect spriteSrcRect = new Rect();
-	protected Rect pos = new Rect();
+	protected Rect dest = new Rect();
+	protected Point boardPos;
 	
-	public static void initGraphic(){
-		//TODO -- replace 0 with resource ID of piece graphic set
-		graphic = BoardPieceGraphicMgr.registerGraphics(BoardPiece.class, R.drawable.candy_sprites, 4, 4);
+	private static BoardPieceGraphic getGraphic(){
+		if(graphic == null){
+			graphic = BoardPieceGraphicMgr.registerGraphics(BoardPiece.class, R.drawable.candy_sprites, 4, 4);
+		}
+		return graphic;
 	}
 	
-	private BoardPiece(Point loc){
+	private BoardPiece(Point boardLoc){
 		this.category = Category.NONE;
-		pos.left = loc.x;
-		pos.right = loc.x;
-		pos.top = loc.y;
-		pos.bottom = loc.y;
+		int spriteW = getSpriteWidth();
+		int spriteH = getSpriteHeight();
+		dest.left = boardLoc.x * spriteW;
+		dest.right = boardLoc.x * spriteW;
+		dest.top = boardLoc.y * spriteH;
+		dest.bottom = boardLoc.y * spriteH;
+		boardPos = boardLoc;
 	}
 	
-	public BoardPiece(Category type, SubType sub){
+	public BoardPiece(Point boardLoc, Category type, SubType sub){
+		this(boardLoc);
 		this.category = type;
 		this.subType = sub;
+		rescaleSpriteRects();
 	}
 	
 	public boolean matches(BoardPiece other){
@@ -59,30 +68,37 @@ public class BoardPiece {
 	public void onRemoveAdjacent(){
 	}
 	
+	protected int getSpriteWidth(){
+		return getGraphic().scaled.getWidth() / Category.WILD.ordinal();
+	}
+	protected int getSpriteHeight(){
+		return getGraphic().scaled.getHeight() / SubType.values().length;
+	}
+	
 	private void rescaleSpriteRects(){
-		int spriteWidth = graphic.scaled.getWidth() / Category.values().length;
-		int spriteHeight = graphic.scaled.getHeight() / SubType.values().length;
+		int spriteWidth = getSpriteWidth();
+		int spriteHeight = getSpriteHeight();
 		
 		spriteSrcRect.left = spriteWidth * category.ordinal();
 		spriteSrcRect.right = spriteSrcRect.left + spriteWidth;
 		spriteSrcRect.top = spriteWidth * subType.ordinal();
 		spriteSrcRect.bottom = spriteSrcRect.top + spriteHeight;
 		
-		pos.bottom = spriteHeight + pos.top;
-		pos.right = spriteWidth + pos.left;
+		dest.bottom = spriteHeight + dest.top;
+		dest.right = spriteWidth + dest.left;
 	}
 	
 	public void draw(Canvas canvas, int offsetX, int offsetY){
 		if(category.ordinal() < Category.WILD.ordinal()){
-			pos.left += offsetX;
-			pos.right += offsetX;
-			pos.top += offsetY;
-			pos.bottom += offsetY;
-			canvas.drawBitmap(graphic.scaled, spriteSrcRect, pos, null);
-			pos.left -= offsetX;
-			pos.right -= offsetX;
-			pos.top -= offsetY;
-			pos.bottom -= offsetY;
+			dest.left += offsetX;
+			dest.right += offsetX;
+			dest.top += offsetY;
+			dest.bottom += offsetY;
+			canvas.drawBitmap(getGraphic().scaled, spriteSrcRect, dest, null);
+			dest.left -= offsetX;
+			dest.right -= offsetX;
+			dest.top -= offsetY;
+			dest.bottom -= offsetY;
 		}
 	}
 }

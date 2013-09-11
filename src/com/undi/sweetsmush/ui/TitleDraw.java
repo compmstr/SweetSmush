@@ -23,8 +23,10 @@ public class TitleDraw extends Drawer{
 	}
 	
 	private void scaleBackground(int w, int h){
-		double aspectRatio = (double)(backgroundRaw.getHeight()) / backgroundRaw.getWidth() ;
-		this.background = Bitmap.createScaledBitmap(backgroundRaw, w, (int)(w * aspectRatio), true);
+		if(w > 0 && h > 0){
+			double aspectRatio = (double)(backgroundRaw.getHeight()) / backgroundRaw.getWidth() ;
+			this.background = Bitmap.createScaledBitmap(backgroundRaw, w, (int)(w * aspectRatio), true);
+		}
 	}
 	
 	@Override

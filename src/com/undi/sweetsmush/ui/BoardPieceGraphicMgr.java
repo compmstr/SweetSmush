@@ -21,16 +21,20 @@ public class BoardPieceGraphicMgr {
 	private static int screenW = -1;
 	private static int screenH = -1;
 	private static Context context = null;
-	private static final float PIECE_SIZE_PERCENT = 0.12f;
+	public static final float PIECE_SIZE_PERCENT = 0.12f;
 	
-	public static void init(Context ctx){
+	public static void init(Context ctx, int screenW, int screenH){
+		BoardPieceGraphicMgr.screenW = screenW;
+		BoardPieceGraphicMgr.screenH = screenH;
 		BoardPieceGraphicMgr.context = ctx;
 		graphics = new HashMap<Class<? extends BoardPiece>, BoardPieceGraphicMgr.BoardPieceGraphic>();
 	}
 	
 	public static BoardPieceGraphic registerGraphics(Class<? extends BoardPiece> cls, int resourceId, int categories, int subTypes){
 		BoardPieceGraphic newEntry = new BoardPieceGraphic();
-		newEntry.raw = BitmapFactory.decodeResource(context.getResources(), resourceId);
+		BitmapFactory.Options opts = new BitmapFactory.Options();
+		opts.inScaled = false;
+		newEntry.raw = BitmapFactory.decodeResource(context.getResources(), resourceId, opts);
 		newEntry.categories = categories;
 		newEntry.subTypes = subTypes;
 		scaleEntry(newEntry);
@@ -39,12 +43,17 @@ public class BoardPieceGraphicMgr {
 	}
 	
 	private static void scaleEntry(BoardPieceGraphic entry){
-		float scaledW = screenW * PIECE_SIZE_PERCENT;
-		float scaledH = screenH * PIECE_SIZE_PERCENT;
-		entry.scaled = Bitmap.createScaledBitmap(entry.raw, (int)(scaledW * entry.categories), 
-				(int)(scaledH * entry.subTypes), true);
-		entry.scaledTileW = (int) scaledW;
-		entry.scaledTileH = (int) scaledH;
+		if(screenW > 0 && screenH > 0){
+			int origW = entry.raw.getWidth() / entry.categories;
+			int origH = entry.raw.getHeight() / entry.subTypes;
+			float aspectRatio = (float)origH / origW;
+			float scaledW = screenW * PIECE_SIZE_PERCENT;
+			float scaledH = scaledW * aspectRatio;
+			entry.scaled = Bitmap.createScaledBitmap(entry.raw, (int)(scaledW * entry.categories), 
+					(int)(scaledH * entry.subTypes), true);
+			entry.scaledTileW = (int) scaledW;
+			entry.scaledTileH = (int) scaledH;
+		}
 	}
 
 	public static void onResize(int screenW, int screenH){

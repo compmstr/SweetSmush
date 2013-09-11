@@ -14,6 +14,7 @@ public abstract class Drawer {
 	protected Context context;
 	protected int screenW, screenH;
 	protected Paint whiteText;
+	protected Paint grayText;
 	
 	public Drawer(SurfaceHolder holder, Context context){
 		this.context = context;
@@ -24,6 +25,12 @@ public abstract class Drawer {
 		whiteText.setTextAlign(Align.LEFT);
 		whiteText.setStyle(Style.STROKE);
 		whiteText.setAntiAlias(true);
+
+		grayText = new Paint();
+		grayText.setColor(Color.GRAY);
+		grayText.setTextAlign(Align.LEFT);
+		grayText.setStyle(Style.STROKE);
+		grayText.setAntiAlias(true);
 	}
 	
 	protected abstract void doDraw(Canvas c);

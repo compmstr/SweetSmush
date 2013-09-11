@@ -2,15 +2,15 @@ package com.undi.sweetsmush.ui;
 
 import android.view.MotionEvent;
 
-import com.undi.sweetsmush.game.Game;
+import com.undi.sweetsmush.game.GameHolder;
 import com.undi.sweetsmush.view.SweetSmushView;
 
 public class GameInput extends Input {
-	private Game game;
+	private GameHolder gameHolder;
 
-	public GameInput(SweetSmushView mainView, Game game) {
+	public GameInput(SweetSmushView mainView, GameHolder gameHolder) {
 		super(mainView);
-		this.game = game;
+		this.gameHolder = gameHolder;
 	}
 
 	@Override
