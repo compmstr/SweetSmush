@@ -29,12 +29,12 @@ public class BoardPiece {
 	
 	private BoardPiece(Point boardLoc){
 		this.category = Category.NONE;
-		int spriteW = getSpriteWidth();
-		int spriteH = getSpriteHeight();
-		dest.left = boardLoc.x * spriteW;
-		dest.right = boardLoc.x * spriteW;
-		dest.top = boardLoc.y * spriteH;
-		dest.bottom = boardLoc.y * spriteH;
+		int spriteWidth = getSpriteWidth();
+		int spriteHeight = getSpriteHeight();
+		dest.left = boardLoc.x * spriteWidth;
+		dest.right = boardLoc.x * spriteWidth;
+		dest.top = boardLoc.y * spriteHeight;
+		dest.bottom = boardLoc.y * spriteHeight;
 		boardPos = boardLoc;
 	}
 	
@@ -69,13 +69,13 @@ public class BoardPiece {
 	}
 	
 	protected int getSpriteWidth(){
-		return getGraphic().scaled.getWidth() / Category.WILD.ordinal();
+		return getGraphic().scaledTileW;
 	}
 	protected int getSpriteHeight(){
-		return getGraphic().scaled.getHeight() / SubType.values().length;
+		return getGraphic().scaledTileH;
 	}
 	
-	private void rescaleSpriteRects(){
+	public void rescaleSpriteRects(){
 		int spriteWidth = getSpriteWidth();
 		int spriteHeight = getSpriteHeight();
 		
@@ -84,12 +84,15 @@ public class BoardPiece {
 		spriteSrcRect.top = spriteWidth * subType.ordinal();
 		spriteSrcRect.bottom = spriteSrcRect.top + spriteHeight;
 		
+		dest.top = boardPos.y * spriteHeight;
+		dest.left = boardPos.x * spriteWidth;
 		dest.bottom = spriteHeight + dest.top;
 		dest.right = spriteWidth + dest.left;
 	}
 	
 	public void draw(Canvas canvas, int offsetX, int offsetY){
 		if(category.ordinal() < Category.WILD.ordinal()){
+			rescaleSpriteRects();
 			dest.left += offsetX;
 			dest.right += offsetX;
 			dest.top += offsetY;

@@ -13,8 +13,8 @@ public class BoardPieceGraphicMgr {
 	public static class BoardPieceGraphic{
 		public Bitmap raw;
 		public Bitmap scaled;
-		int categories, subTypes;
-		int scaledTileW, scaledTileH;
+		public int categories, subTypes;
+		public int scaledTileW, scaledTileH;
 	}
 
 	private static Map<Class<? extends BoardPiece>, BoardPieceGraphic> graphics;
@@ -22,6 +22,8 @@ public class BoardPieceGraphicMgr {
 	private static int screenH = -1;
 	private static Context context = null;
 	public static final float PIECE_SIZE_PERCENT = 0.12f;
+	public static int tileW = -1;
+	public static int tileH = -1;
 	
 	public static void init(Context ctx, int screenW, int screenH){
 		BoardPieceGraphicMgr.screenW = screenW;
@@ -42,23 +44,25 @@ public class BoardPieceGraphicMgr {
 		return newEntry;
 	}
 	
+	public static BoardPieceGraphic getGraphic(Class<? extends BoardPiece> cls){
+		return graphics.get(cls);
+	}
+	
 	private static void scaleEntry(BoardPieceGraphic entry){
 		if(screenW > 0 && screenH > 0){
-			int origW = entry.raw.getWidth() / entry.categories;
-			int origH = entry.raw.getHeight() / entry.subTypes;
-			float aspectRatio = (float)origH / origW;
-			float scaledW = screenW * PIECE_SIZE_PERCENT;
-			float scaledH = scaledW * aspectRatio;
-			entry.scaled = Bitmap.createScaledBitmap(entry.raw, (int)(scaledW * entry.categories), 
-					(int)(scaledH * entry.subTypes), true);
-			entry.scaledTileW = (int) scaledW;
-			entry.scaledTileH = (int) scaledH;
+			entry.scaled = Bitmap.createScaledBitmap(entry.raw, tileW * entry.categories, 
+					tileH * entry.subTypes, true);
+			entry.scaledTileW = tileW;
+			entry.scaledTileH = tileH;
 		}
 	}
 
 	public static void onResize(int screenW, int screenH){
 		BoardPieceGraphicMgr.screenW = screenW;
 		BoardPieceGraphicMgr.screenH = screenH;
+		tileW = (int) (screenW * PIECE_SIZE_PERCENT);
+		//All of the pieces are square
+		tileH = (int) (tileW);
 		for(BoardPieceGraphic entry : graphics.values()){
 			scaleEntry(entry);
 		}

@@ -44,8 +44,8 @@ public class SweetSmushView extends SurfaceView implements Callback, GameHolder 
 			case GAME:
 				BoardPieceGraphicMgr.init(getContext(), screenW, screenH);
 				this.game = new Game();
-				input = new GameInput(this, this);
 				drawer = new GameDraw(getHolder(), getContext(), this);
+				input = new GameInput(this, this, (GameDraw) drawer);
 				break;
 			case TITLE:
 				input = new TitleInput(this);

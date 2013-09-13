@@ -14,6 +14,22 @@ public class GameDraw extends Drawer {
 	
 	private Paint bgPaint;
 	
+	private final float boardDrawOffsetXPercent = 0.02f;
+	private final float boardDrawOffsetYPercent = 0.25f;
+	
+	public int getTileWidth(){
+		return BoardPieceGraphicMgr.tileW;
+	}
+	public int getTileHeight(){
+		return BoardPieceGraphicMgr.tileH;
+	}
+	public int getBoardDrawOffsetX(){
+		return (int) (screenW * boardDrawOffsetXPercent);
+	}
+	public int getBoardDrawOffsetY(){
+		return (int) (screenH * boardDrawOffsetYPercent);
+	}
+	
 	public GameDraw(SurfaceHolder holder, Context context, GameHolder gameHolder){
 		super(holder, context);
 		this.gameHolder = gameHolder;
@@ -29,12 +45,10 @@ public class GameDraw extends Drawer {
 	 */
 	@Override
 	protected void doDraw(Canvas c){
-		int boardDrawX = (int) (screenW * 0.02);
-		int boardDrawY = (int) (screenH * 0.25);
 		Game game = gameHolder.getGame();
 		c.drawRect(c.getClipBounds(), bgPaint);
 		if(game != null){
-			game.getLevel().getBoard().draw(boardDrawX, boardDrawY, c);
+			game.getLevel().getBoard().draw(getBoardDrawOffsetX(), getBoardDrawOffsetY(), c);
 		}
 		c.drawText("test text", 10, whiteText.getTextSize() + 5, whiteText);
 	}
