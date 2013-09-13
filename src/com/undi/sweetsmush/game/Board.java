@@ -17,6 +17,7 @@ public class Board {
 	private Random rand;
 	
 	public static enum Move {UP, LEFT, DOWN, RIGHT};
+	public static Point INVALID_POINT = new Point();
 	
 	public Board(int rows, int cols, long seed){
 		this.cols = cols;
@@ -141,18 +142,26 @@ public class Board {
 	}
 	
 	public boolean isValidMove(Point from, Move move){
-		return isValidMove(getIdx(from.x, from.y), getIdx(from.x, from.y, move));
-	}
-	public boolean isValidMove(int fromIdx, int toIdx){
-		//make sure they're neighbors
-		if(Math.abs(toIdx - fromIdx) != 1 &&
-				Math.abs(toIdx - fromIdx) != cols){
-			return false;
+		Point otherPoint = applyMove(from, move);
+		if(otherPoint != INVALID_POINT){
+			return isValidMove(from, otherPoint);
 		}
-		BoardPiece fromPiece = pieces.get(fromIdx);
-		BoardPiece toPiece = pieces.get(toIdx);
-		
-		return fromPiece.matches(toPiece) || toPiece.matches(fromPiece);
+		return false;
+	}
+	public boolean isValidMove(Point a, Point b){
+		boolean ret = false;
+		//make sure they're neighbors
+		int dx = Math.abs(a.x - b.x);
+		int dy = Math.abs(a.y - b.y);
+		if((dx == 1 && dy == 0) || (dx == 0 && dy == 1)){
+			BoardPiece aPiece = pieces.get(getIdx(a));
+			BoardPiece bPiece = pieces.get(getIdx(b));
+			if(isVertMatch(b, aPiece) || isHorizMatch(b, aPiece) ||
+				isVertMatch(a, bPiece) || isHorizMatch(a, bPiece)){
+				ret = true;
+			}
+		}
+		return ret;
 	}
 	
 	/**
@@ -172,6 +181,31 @@ public class Board {
 	public int getIdx(Point p){
 		return getIdx(p.x, p.y);
 	}
+	
+	/**
+	 * Returns a new point which represents p with <move> applied
+	 * Returns INVALID_POINT if not within board
+	 * @param p
+	 * @param move
+	 * @return
+	 */
+	public Point applyMove(Point p, Move move){
+		switch(move){
+		case UP:
+			if(p.y > 0) return new Point(p.x, p.y - 1);
+			break;
+		case DOWN:
+			if(p.y < (rows - 1)) return new Point(p.x, p.y + 1);
+			break;
+		case RIGHT:
+			if(p.x < (cols - 1)) return new Point(p.x + 1, p.y);
+			break;
+		case LEFT:
+			if(p.x > 0) return new Point(p.x - 1, p.y);
+			break;
+		}
+		return INVALID_POINT;
+	}
 	/**
 	 * Returns the index for the piece <Move> from the provided col and row
 	 *   ex: if move = RIGHT, then returns the index at col/row + 1, or -1 if
@@ -182,25 +216,10 @@ public class Board {
 	 * @return index of piece <Move> away from col, row, or -1 if invalid spot
 	 */
 	public int getIdx(int col, int row, Move move){
-		int ret = -1;
-		switch(move){
-		case UP:
-			if(row > 0) ret = getIdx(col, row - 1);
-			break;
-		case DOWN:
-			if(row < rows - 1) ret = getIdx(col, row + 1);
-			break;
-		case LEFT:
-			if(col > 0) ret = getIdx(col - 1, row);
-			break;
-		case RIGHT:
-			if(col < cols - 1) ret = getIdx(col + 1, row);
-			break;
-		}
-		return ret;
+		return getIdx(new Point(col, row), move);
 	}
 	public int getIdx(Point p, Move move){
-		return getIdx(p.x, p.y, move);
+		return getIdx(applyMove(p, move));
 	}
 	
 	public void removePiece(int x, int y){

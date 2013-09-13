@@ -5,6 +5,7 @@ import android.view.MotionEvent;
 import android.widget.Toast;
 
 import com.undi.sweetsmush.game.Board;
+import com.undi.sweetsmush.game.Board.Move;
 import com.undi.sweetsmush.game.BoardPiece;
 import com.undi.sweetsmush.game.GameHolder;
 import com.undi.sweetsmush.view.SweetSmushView;
@@ -16,6 +17,7 @@ public class GameInput extends Input {
 	private static final Point NONE = new Point(-1, -1);
 	
 	private BoardPiece curPiece = null;
+	private Point curPieceLoc = null;
 	private Point curPieceTouchStart = null;
 
 	public GameInput(SweetSmushView mainView, GameHolder gameHolder, GameDraw draw) {
@@ -44,6 +46,7 @@ public class GameInput extends Input {
 	private void clearCurPiece(){
 		curPiece = null;
 		curPieceTouchStart = null;
+		curPieceLoc = null;
 	}
 
 	@Override
@@ -56,12 +59,21 @@ public class GameInput extends Input {
 			if(curPiece == null){
 				BoardPiece piece = gameHolder.getGame().getLevel().getBoard().getPieceAt(picked);
 				curPiece = piece;
-				curPieceTouchStart = picked;
+				curPieceLoc = picked;
+				curPieceTouchStart = new Point(x, y);
 				Toast.makeText(mainView.getContext(), "Picked a piece: " + piece.getCategory().name(), Toast.LENGTH_SHORT).show();
 			}
 		}
 	}
-
+	
+	private String validMoveString(Point picked, Move move){
+		if(gameHolder.getGame().getLevel().getBoard().isValidMove(picked, move)){
+			return "Valid move";
+		}else{
+			return "Invalid move";
+		}
+	}
+	
 	@Override
 	protected void onActionMove(MotionEvent e) {
 		int x = (int) e.getX();
@@ -73,20 +85,28 @@ public class GameInput extends Input {
 			int dxAbs = Math.abs(dx);
 			int dyAbs = Math.abs(dy);
 			if(dxAbs > 20 && dxAbs >= (2 * dyAbs)){
-				if(dx < 0){
-					Toast.makeText(mainView.getContext(), "Moved RIGHT", Toast.LENGTH_SHORT).show();
+				if(dx > 0){
+					Toast.makeText(mainView.getContext(),
+							"Moved RIGHT -- " + validMoveString(curPieceLoc, Move.RIGHT),
+							Toast.LENGTH_SHORT).show();
 					clearCurPiece();
 				}else{
-					Toast.makeText(mainView.getContext(), "Moved LEFT", Toast.LENGTH_SHORT).show();
+					Toast.makeText(mainView.getContext(),
+							"Moved LEFT -- " + validMoveString(curPieceLoc, Move.LEFT),
+							Toast.LENGTH_SHORT).show();
 					clearCurPiece();
 				}
 			}
 			if(dyAbs > 20 && dyAbs >= (2 * dxAbs)){
 				if(dy > 0){
-					Toast.makeText(mainView.getContext(), "Moved DOWN", Toast.LENGTH_SHORT).show();
+					Toast.makeText(mainView.getContext(),
+							"Moved DOWN -- " + validMoveString(curPieceLoc, Move.DOWN),
+							Toast.LENGTH_SHORT).show();
 					clearCurPiece();
 				}else{
-					Toast.makeText(mainView.getContext(), "Moved UP", Toast.LENGTH_SHORT).show();
+					Toast.makeText(mainView.getContext(),
+							"Moved UP -- " + validMoveString(curPieceLoc, Move.UP),
+							Toast.LENGTH_SHORT).show();
 					clearCurPiece();
 				}
 			}
