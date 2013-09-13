@@ -1,6 +1,8 @@
 package com.undi.sweetsmush.game;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -87,7 +89,7 @@ public class Board {
 		int startIdx = getIdx(p);
 		int numPieces = 1;
 		//Search left
-		for(int i = 1; i < (p.x - 1); i--){
+		for(int i = 1; i <= p.x; i--){
 			if(pieces.get(startIdx - i).matches(piece)){
 				numPieces++;
 			}else{
@@ -95,7 +97,7 @@ public class Board {
 			}
 		}
 		//Search right
-		for(int i = 0; i < (cols - (p.x - 1)); i++){
+		for(int i = 1; i < (cols - p.x); i++){
 			if(pieces.get(startIdx + i).matches(piece)){
 				numPieces++;
 			}else{
@@ -118,7 +120,7 @@ public class Board {
 		
 		int startIdx = getIdx(p);
 		//Search up
-		for(int i = 1; i < (p.y - 1); i++){
+		for(int i = 1; i <= p.y; i++){
 			if(pieces.get(startIdx - (i * cols)).matches(piece)){
 				numPieces++;
 			}else{
@@ -126,7 +128,7 @@ public class Board {
 			}
 		}
 		//Search down
-		for(int i = 0; i < (rows - (p.y - 1)); i++){
+		for(int i = 1; i < (rows - p.y); i++){
 			if(pieces.get(startIdx + (i * cols)).matches(piece)){
 				numPieces++;
 			}else{
@@ -141,6 +143,10 @@ public class Board {
 		}
 	}
 	
+	private void swapPieces(Point from, Point to){
+		Collections.swap(pieces, getIdx(from), getIdx(to));
+	}
+	
 	public boolean isValidMove(Point from, Move move){
 		Point otherPoint = applyMove(from, move);
 		if(otherPoint != INVALID_POINT){
@@ -150,17 +156,19 @@ public class Board {
 	}
 	public boolean isValidMove(Point a, Point b){
 		boolean ret = false;
+		//swap the pieces while we check
+		swapPieces(a, b);
 		//make sure they're neighbors
 		int dx = Math.abs(a.x - b.x);
 		int dy = Math.abs(a.y - b.y);
 		if((dx == 1 && dy == 0) || (dx == 0 && dy == 1)){
-			BoardPiece aPiece = pieces.get(getIdx(a));
-			BoardPiece bPiece = pieces.get(getIdx(b));
-			if(isVertMatch(b, aPiece) || isHorizMatch(b, aPiece) ||
-				isVertMatch(a, bPiece) || isHorizMatch(a, bPiece)){
+			if(isVertMatch(b) || isHorizMatch(b) ||
+				isVertMatch(a) || isHorizMatch(a)){
 				ret = true;
 			}
 		}
+		//Swap the pieces back
+		swapPieces(a, b);
 		return ret;
 	}
 	
